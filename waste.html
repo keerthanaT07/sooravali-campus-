@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sooravali Campus  Waste Guide</title>
+<style>
+/* ===========================
+   Sooravali Campus  SHARED STYLES
+   =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #080d08;
+  --surface: #0f160f;
+  --surface2: #141e14;
+  --card: #182018;
+  --card2: #1e2a1e;
+  --green1: #4ade80;
+  --green2: #22c55e;
+  --green3: #16a34a;
+  --green4: #166534;
+  --lime: #a3e635;
+  --gold: #fbbf24;
+  --blue: #60a5fa;
+  --red: #ef4444;
+  --text: #e2f0e2;
+  --text2: #b8d4b8;
+  --muted: #5a8a5a;
+  --border: #243224;
+  --border2: #2e422e;
+  --glow: rgba(74,222,128,0.12);
+  --glow2: rgba(74,222,128,0.06);
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: 
+    linear-gradient(rgba(8,13,8,0.85), rgba(8,13,8,0.95)),
+    url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* NOISE TEXTURE */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9998; opacity:0.6;
+}
+
+/* CURSOR */
+.cursor {
+  width:22px; height:22px;
+  border:2px solid var(--green1);
+  border-radius:50%;
+  position:fixed; pointer-events:none; z-index:9999;
+  transition: transform 0.15s, opacity 0.3s;
+  mix-blend-mode: exclusion;
+}
+.cursor-dot {
+  width:5px; height:5px;
+  background:var(--green1);
+  border-radius:50%;
+  position:fixed; pointer-events:none; z-index:9999;
+}
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:36px; right:36px;
+  background:var(--card); border:1px solid var(--green3);
+  border-radius:14px; padding:14px 22px;
+  font-size:0.88rem; color:var(--green1);
+  z-index:9000; transform:translateY(80px); opacity:0;
+  transition:all 0.4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  max-width:320px; line-height:1.4;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* =========== NAVBAR =========== */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  padding:0 48px;
+  height:68px;
+  display:flex; align-items:center; justify-content:space-between;
+  backdrop-filter:blur(24px) saturate(180%);
+  background:rgba(8,13,8,0.88);
+  border-bottom:1px solid var(--border);
+  transition:all 0.3s;
+}
+nav.scrolled { height:58px; background:rgba(8,13,8,0.97); }
+
+.nav-logo {
+  font-family:var(--font-display);
+  font-size:1.35rem; font-weight:900;
+  color:var(--green1); text-decoration:none;
+  letter-spacing:-0.5px; white-space:nowrap;
+  flex-shrink:0;
+}
+.nav-logo span { color:var(--lime); }
+
+.nav-links {
+  display:flex; gap:4px; list-style:none;
+  align-items:center; flex:1; justify-content:center;
+}
+.nav-links a {
+  font-size:0.8rem; font-weight:500;
+  color:var(--muted); text-decoration:none;
+  padding:6px 12px; border-radius:8px;
+  transition:all 0.2s; white-space:nowrap;
+  letter-spacing:0.2px;
+}
+.nav-links a:hover, .nav-links a.active {
+  color:var(--green1); background:var(--glow2);
+}
+.nav-cta {
+  padding:9px 22px;
+  background:var(--green3);
+  color:#fff; border:none; border-radius:100px;
+  font-family:var(--font-body); font-weight:600; font-size:0.82rem;
+  cursor:pointer; text-decoration:none;
+  transition:all 0.3s; white-space:nowrap; flex-shrink:0;
+}
+.nav-cta:hover { background:var(--green2); transform:translateY(-1px); }
+
+.hamburger {
+  display:none; background:none; border:none;
+  color:var(--green1); font-size:1.4rem; cursor:pointer;
+}
+
+/* =========== PAGE HERO =========== */
+.page-hero {
+  padding: 140px 60px 80px;
+  position:relative; overflow:hidden;
+  min-height:340px;
+  display:flex; align-items:center;
+}
+.page-hero-bg {
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 10% 50%, rgba(74,222,128,0.05), transparent 70%);
+}
+.page-hero-content { position:relative; z-index:2; }
+.page-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 16px;
+  background:rgba(74,222,128,0.08);
+  border:1px solid rgba(74,222,128,0.25);
+  border-radius:100px;
+  font-size:0.72rem; font-weight:600; color:var(--green2);
+  letter-spacing:1.5px; text-transform:uppercase;
+  margin-bottom:20px;
+}
+.page-title {
+  font-family:var(--font-display);
+  font-size:clamp(2.4rem,5vw,4.5rem);
+  font-weight:900; line-height:1;
+  letter-spacing:-2px; margin-bottom:16px;
+}
+.page-title em { font-style:italic; color:var(--green1); }
+.page-subtitle { font-size:1rem; color:var(--muted); max-width:540px; line-height:1.7; }
+
+/* =========== HOME HERO =========== */
+#hero {
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+  padding:120px 60px 80px;
+  text-align:center;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 90% 70% at 20% 60%, rgba(22,163,74,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(163,230,53,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 60% 80%, rgba(74,222,128,0.06) 0%, transparent 40%);
+}
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
+  background-size:64px 64px;
+}
+.floating-leaves { position:absolute; inset:0; pointer-events:none; }
+.leaf { position:absolute; opacity:0.12; font-size:2rem; animation:floatLeaf 9s ease-in-out infinite; }
+.l1{top:8%;left:4%;font-size:3.2rem;animation-delay:0s}
+.l2{top:18%;right:7%;font-size:1.6rem;animation-delay:1.8s}
+.l3{top:55%;left:2%;font-size:2.8rem;animation-delay:3.5s}
+.l4{bottom:18%;right:4%;font-size:2.2rem;animation-delay:2.2s}
+.l5{top:35%;right:14%;font-size:2rem;animation-delay:4.5s}
+.l6{bottom:28%;left:10%;font-size:1.4rem;animation-delay:1s}
+.l7{top:72%;right:22%;font-size:1.8rem;animation-delay:5s}
+.l8{top:25%;left:18%;font-size:1.2rem;animation-delay:0.5s}
+
+@keyframes floatLeaf {
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  33%{transform:translateY(-22px) rotate(18deg)}
+  66%{transform:translateY(12px) rotate(-12deg)}
+}
+
+.hero-content { position:relative; z-index:2; max-width:860px; }
+.hero-badge {
+  display:inline-block; padding:8px 22px;
+  background:rgba(74,222,128,0.1);
+  border:1px solid rgba(74,222,128,0.3);
+  border-radius:100px; font-size:0.8rem;
+  font-weight:600; color:var(--green1);
+  letter-spacing:0.8px; margin-bottom:36px;
+  animation:fadeInDown 1s ease;
+}
+.hero-title {
+  font-family:var(--font-display);
+  font-size:clamp(4rem,10vw,8rem);
+  font-weight:900; line-height:0.9;
+  letter-spacing:-4px; margin-bottom:28px;
+  animation:fadeInUp 1s ease 0.2s both;
+}
+.line1{display:block;color:var(--text)}
+.line2{
+  display:block;
+  background:linear-gradient(135deg,var(--green1),var(--lime));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.line3{display:block;color:var(--muted);font-style:italic}
+.hero-sub {
+  font-size:1.1rem; color:var(--muted); line-height:1.75;
+  max-width:560px; margin:0 auto 52px;
+  animation:fadeInUp 1s ease 0.4s both;
+}
+.hero-actions {
+  display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+  animation:fadeInUp 1s ease 0.6s both;
+}
+.hero-scroll-hint {
+  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+  font-family:var(--font-mono); font-size:0.7rem;
+  color:var(--muted); letter-spacing:2px;
+  animation:bounce 2s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* STATS BAR */
+.stats-bar {
+  padding:40px 60px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  display:grid; grid-template-columns:repeat(4,1fr); gap:30px;
+}
+.stat-item { text-align:center; position:relative; }
+.stat-item:not(:last-child)::after {
+  content:''; position:absolute; right:0; top:50%;
+  transform:translateY(-50%); width:1px; height:55%;
+  background:var(--border);
+}
+.stat-num {
+  font-family:var(--font-mono); font-size:2.4rem; font-weight:700;
+  color:var(--green1); display:block;
+}
+.stat-icon { font-size:1.4rem; margin-bottom:6px; }
+.stat-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+
+/* FEATURES GRID */
+.features-section { padding:100px 60px; }
+.features-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  margin-top:60px;
+}
+.feature-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:32px 28px;
+  text-decoration:none; color:var(--text);
+  transition:all 0.3s; display:block;
+  position:relative; overflow:hidden;
+  animation-delay:var(--delay);
+}
+.feature-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,var(--glow),transparent);
+  opacity:0; transition:opacity 0.3s;
+}
+.feature-card:hover { transform:translateY(-6px); border-color:var(--green3); }
+.feature-card:hover::before { opacity:1; }
+.highlight-card { border-color:var(--green4); background:linear-gradient(135deg,var(--card),rgba(22,163,74,0.08)); }
+.fc-icon { font-size:2.4rem; margin-bottom:16px; display:block; }
+.feature-card h3 { font-family:var(--font-display); font-size:1.15rem; font-weight:700; margin-bottom:10px; }
+.feature-card p { font-size:0.85rem; color:var(--muted); line-height:1.65; }
+.fc-arrow {
+  position:absolute; bottom:24px; right:24px;
+  font-size:1.2rem; color:var(--green3);
+  transition:transform 0.3s;
+}
+.feature-card:hover .fc-arrow { transform:translateX(4px); }
+
+/* CTA BANNER */
+.cta-banner {
+  margin:0 60px 100px;
+  background:linear-gradient(135deg,var(--card),var(--card2));
+  border:1px solid var(--border2); border-radius:28px;
+  overflow:hidden; position:relative;
+}
+.cta-banner::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 80% 80% at 10% 50%,rgba(74,222,128,0.1),transparent 60%);
+}
+.cta-inner {
+  position:relative; z-index:1;
+  padding:60px; display:flex;
+  align-items:center; justify-content:space-between; gap:40px;
+}
+.cta-text h2 { font-family:var(--font-display); font-size:2rem; font-weight:700; margin-bottom:8px; }
+.cta-text p { color:var(--muted); font-size:1rem; }
+.cta-btns { display:flex; gap:14px; flex-shrink:0; }
+
+/* BUTTONS */
+.btn-primary {
+  padding:14px 34px;
+  background:linear-gradient(135deg,var(--green2),var(--green3));
+  color:#fff; border:none; border-radius:100px;
+  font-family:var(--font-body); font-weight:700; font-size:0.95rem;
+  cursor:pointer; text-decoration:none; display:inline-flex;
+  align-items:center; gap:8px;
+  transition:all 0.3s;
+  box-shadow:0 0 28px rgba(34,197,94,0.25);
+}
+.btn-primary:hover { transform:translateY(-3px); box-shadow:0 0 44px rgba(34,197,94,0.45); }
+.btn-outline {
+  padding:14px 34px;
+  background:transparent; color:var(--green1);
+  border:1px solid var(--border2); border-radius:100px;
+  font-family:var(--font-body); font-weight:600; font-size:0.95rem;
+  cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+  transition:all 0.3s;
+}
+.btn-outline:hover { border-color:var(--green1); background:var(--glow); }
+
+/* =========== SECTION UTILS =========== */
+.section-header { margin-bottom:60px; }
+.section-label {
+  font-family:var(--font-mono); font-size:0.7rem;
+  color:var(--green2); letter-spacing:3px;
+  text-transform:uppercase; margin-bottom:14px;
+}
+.section-title {
+  font-family:var(--font-display);
+  font-size:clamp(1.8rem,4vw,3.2rem);
+  font-weight:700; line-height:1.1; letter-spacing:-1px; margin-bottom:16px;
+}
+.section-title em { font-style:italic; color:var(--green1); }
+.section-desc { font-size:0.95rem; color:var(--muted); line-height:1.75; max-width:480px; }
+
+/* =========== CARDS =========== */
+.card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:28px;
+  transition:all 0.3s;
+}
+.card:hover { border-color:var(--border2); }
+
+/* =========== FORM ELEMENTS =========== */
+.input-field, .select-field {
+  width:100%;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:12px; padding:14px 18px;
+  color:var(--text); font-family:var(--font-body); font-size:0.92rem;
+  outline:none; transition:border-color 0.3s;
+}
+.input-field:focus, .select-field:focus { border-color:var(--green2); }
+.input-field::placeholder { color:var(--muted); }
+.form-label {
+  display:block; font-size:0.8rem; font-weight:600;
+  color:var(--muted); text-transform:uppercase;
+  letter-spacing:0.8px; margin-bottom:10px;
+}
+
+/* =========== FOOTER =========== */
+footer {
+  background:var(--surface); border-top:1px solid var(--border);
+  padding:60px;
+}
+.footer-grid {
+  display:grid; grid-template-columns:2fr 1fr 1fr;
+  gap:60px; margin-bottom:40px;
+}
+.footer-brand p { font-size:0.88rem; color:var(--muted); line-height:1.7; max-width:280px; margin-top:12px; }
+.footer-col h4 {
+  font-weight:700; font-size:0.8rem; text-transform:uppercase;
+  letter-spacing:1.2px; color:var(--text2); margin-bottom:18px;
+}
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col ul a { font-size:0.88rem; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+.footer-col ul a:hover { color:var(--green1); }
+.footer-bottom {
+  border-top:1px solid var(--border); padding-top:24px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:12px;
+}
+.footer-copy { font-size:0.82rem; color:var(--muted); }
+.eco-badge { font-size:0.78rem; color:var(--green3); }
+
+/* =========== REVEAL ANIMATION =========== */
+.reveal {
+  opacity:0; transform:translateY(28px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity:1; transform:none; }
+
+/* =========== SCROLLBAR =========== */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--green4); border-radius:3px; }
+
+/* =========== ANIMATIONS =========== */
+@keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:none} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+@keyframes popIn { 0%{transform:scale(0)}80%{transform:scale(1.2)}100%{transform:scale(1)} }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.5} }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* =========== MODAL =========== */
+.modal {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(10px);
+  z-index:600; align-items:center; justify-content:center;
+}
+.modal.open { display:flex; }
+.modal-box {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:24px; padding:52px 44px;
+  max-width:460px; width:90%; text-align:center;
+  animation:fadeInUp 0.4s ease;
+}
+.modal-icon { font-size:4rem; margin-bottom:18px; }
+.modal-title { font-family:var(--font-display); font-size:1.9rem; margin-bottom:12px; }
+.modal-desc { color:var(--muted); font-size:0.92rem; line-height:1.7; margin-bottom:30px; }
+.modal-close {
+  padding:12px 30px; background:var(--green3); color:#fff;
+  border:none; border-radius:100px; cursor:pointer;
+  font-family:var(--font-body); font-weight:600;
+  transition:all 0.3s;
+}
+.modal-close:hover { background:var(--green2); }
+
+/* =========== RESPONSIVE =========== */
+@media(max-width:1100px){
+  .features-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:768px){
+  nav { padding:0 20px; }
+  .nav-links { 
+    display:none; position:fixed; top:68px; left:0; right:0;
+    background:rgba(8,13,8,0.98); flex-direction:column;
+    padding:20px; gap:4px; border-bottom:1px solid var(--border);
+  }
+  .nav-links.open { display:flex; }
+  .hamburger { display:block; }
+  .nav-cta { display:none; }
+  #hero { padding:100px 24px 60px; }
+  .hero-title { font-size:clamp(3rem,12vw,5rem); letter-spacing:-2px; }
+  .stats-bar { grid-template-columns:repeat(2,1fr); padding:32px 24px; }
+  .features-section, .cta-banner-wrap { padding:60px 24px; }
+  .features-grid { grid-template-columns:1fr; gap:14px; }
+  .cta-banner { margin:0 24px 60px; }
+  .cta-inner { flex-direction:column; padding:40px 28px; }
+  .page-hero { padding:110px 24px 60px; }
+  footer { padding:40px 24px; }
+  .footer-grid { grid-template-columns:1fr; gap:32px; }
+  .footer-bottom { flex-direction:column; text-align:center; }
+}
+
+</style>
+<style>
+.waste-section{padding:40px 60px 100px;}
+
+/* CATEGORY TABS */
+.cat-tabs{display:flex;gap:10px;margin-bottom:40px;flex-wrap:wrap;}
+.cat-tab{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 22px;background:var(--card);border:2px solid var(--border);
+  border-radius:16px;cursor:pointer;transition:all 0.3s;
+  font-weight:600;font-size:0.88rem;
+}
+.cat-tab:hover{border-color:var(--border2);}
+.cat-tab.active{border-color:transparent;}
+.cat-tab.wet.active{background:rgba(34,197,94,0.15);border-color:var(--green2);color:var(--green1);}
+.cat-tab.dry.active{background:rgba(251,191,36,0.12);border-color:var(--gold);color:var(--gold);}
+.cat-tab.haz.active{background:rgba(239,68,68,0.1);border-color:var(--red);color:#fca5a5;}
+.cat-tab.ewaste.active{background:rgba(96,165,250,0.1);border-color:var(--blue);color:var(--blue);}
+.cat-tab.plastic.active{background:rgba(167,139,250,0.1);border-color:#a78bfa;color:#c4b5fd;}
+
+/* CATEGORY CONTENT */
+.cat-panel{display:none;}
+.cat-panel.active{display:block;}
+.cat-header{
+  padding:36px;border-radius:24px;margin-bottom:32px;
+  display:flex;align-items:center;gap:24px;
+  position:relative;overflow:hidden;
+}
+.cat-header::before{content:'';position:absolute;inset:0;opacity:0.06;}
+.wet-header{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);}
+.wet-header::before{background:radial-gradient(circle at 80%,var(--green2),transparent);}
+.dry-header{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);}
+.haz-header{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);}
+.ewaste-header{background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.25);}
+.plastic-header{background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.25);}
+.cat-big-icon{font-size:4rem;flex-shrink:0;}
+.cat-name{font-family:var(--font-display);font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+.cat-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;max-width:560px;}
+
+/* ITEMS GRID */
+.items-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px;}
+.waste-item{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px 16px;text-align:center;transition:all 0.3s;cursor:default;
+}
+.waste-item:hover{transform:translateY(-4px);}
+.wi-icon{font-size:2.2rem;margin-bottom:10px;display:block;}
+.wi-name{font-size:0.82rem;font-weight:600;margin-bottom:4px;}
+.wi-tip{font-size:0.72rem;color:var(--muted);line-height:1.4;}
+
+/* TIP CARDS */
+.tip-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.waste-tip{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;
+}
+.wt-icon{font-size:1.8rem;margin-bottom:10px;}
+.wt-title{font-weight:700;font-size:0.9rem;margin-bottom:8px;}
+.wt-text{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+/* BIN GUIDE */
+.bin-guide{
+  background:var(--card);border:1px solid var(--border);border-radius:24px;
+  padding:36px;margin-bottom:36px;
+}
+.bin-guide-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:24px;}
+.bins-row{display:flex;gap:20px;flex-wrap:wrap;}
+.bin-item{
+  flex:1;min-width:140px;text-align:center;
+  padding:24px 16px;border-radius:16px;border:2px solid;
+  transition:all 0.3s;cursor:default;
+}
+.bin-item:hover{transform:translateY(-4px);}
+.bin-g{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.4);}
+.bin-y{background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.4);}
+.bin-r{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.4);}
+.bin-b{background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.4);}
+.bin-p{background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.4);}
+.bin-icon{font-size:2.4rem;margin-bottom:10px;display:block;}
+.bin-label{font-weight:700;font-size:0.85rem;margin-bottom:4px;}
+.bin-examples{font-size:0.72rem;color:var(--muted);line-height:1.5;}
+
+@media(max-width:900px){
+  .items-grid{grid-template-columns:repeat(2,1fr);}
+  .tip-row{grid-template-columns:1fr;}
+  .waste-section{padding:40px 24px 80px;}
+  .bins-row{gap:12px;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="toast" id="toast"></div>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">Sooravali<span>Campus</span></a>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()"></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="calculator.html">Calculator</a></li>
+    <li><a href="quiz.html">Quiz</a></li>
+    <li><a href="trees.html">Trees</a></li>
+    <li><a href="leaderboard.html">Leaders</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="pledge.html">Pledge</a></li>
+    <li><a href="waste.html" class="active">Waste Guide</a></li>
+  </ul>
+  <a href="pledge.html" class="nav-cta">Take Pledge </a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-badge"> Waste Management</div>
+    <h1 class="page-title">Waste Segregation <em>Guide</em></h1>
+    <p class="page-subtitle">Learn the right way to segregate wet, dry, hazardous, e-waste, and plastic waste. Proper segregation is the first step to a zero-waste campus.</p>
+  </div>
+</div>
+
+<div class="waste-section">
+  <!-- BIN GUIDE -->
+  <div class="bin-guide reveal">
+    <div class="bin-guide-title"> Know Your Bins  What Colour Goes Where?</div>
+    <div class="bins-row">
+      <div class="bin-item bin-g"><span class="bin-icon"></span><div class="bin-label">Green Bin</div><div class="bin-examples">Wet/organic waste<br>Food scraps, vegetable peels, leaves</div></div>
+      <div class="bin-item bin-y"><span class="bin-icon"></span><div class="bin-label">Yellow Bin</div><div class="bin-examples">Dry/recyclable waste<br>Paper, cardboard, glass, metals</div></div>
+      <div class="bin-item bin-r"><span class="bin-icon"></span><div class="bin-label">Red Bin</div><div class="bin-examples">Hazardous waste<br>Batteries, chemicals, syringes</div></div>
+      <div class="bin-item bin-b"><span class="bin-icon"></span><div class="bin-label">Blue Bin</div><div class="bin-examples">E-Waste<br>Old phones, cables, circuit boards</div></div>
+      <div class="bin-item bin-p"><span class="bin-icon"></span><div class="bin-label">Grey/Black Bin</div><div class="bin-examples">Non-recyclable / rejects<br>Soiled wrappers, thermocol</div></div>
+    </div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="cat-tabs reveal">
+    <button class="cat-tab wet active" onclick="showCat('wet',this)"> Wet Waste</button>
+    <button class="cat-tab dry" onclick="showCat('dry',this)"> Dry / Recyclable</button>
+    <button class="cat-tab haz" onclick="showCat('haz',this)"> Hazardous</button>
+    <button class="cat-tab ewaste" onclick="showCat('ewaste',this)"> E-Waste</button>
+    <button class="cat-tab plastic" onclick="showCat('plastic',this)"> Plastic Alternatives</button>
+  </div>
+
+  <!-- WET WASTE -->
+  <div class="cat-panel active reveal" id="panel-wet">
+    <div class="cat-header wet-header">
+      <span class="cat-big-icon"></span>
+      <div>
+        <div class="cat-name" style="color:var(--green1)">Wet / Organic Waste</div>
+        <div class="cat-desc">Wet waste is biodegradable and can be composted to create rich manure. It goes in the <strong style="color:var(--green2)">GREEN bin</strong>. Never mix with dry waste  it contaminates recyclables!</div>
+      </div>
+    </div>
+    <div class="items-grid">
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Fruit & Vegetable Peels</div><div class="wi-tip">Compost in 24 weeks  rich manure</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Leftover Food</div><div class="wi-tip">Can be composted or used for biogas</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Dry Leaves & Flowers</div><div class="wi-tip">Great for garden composting</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Tea Bags / Coffee Grounds</div><div class="wi-tip">Excellent compost material</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Coconut Shells</div><div class="wi-tip">Slow compost  chop for faster breakdown</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Eggshells</div><div class="wi-tip">Adds calcium to compost</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Garden Trimmings</div><div class="wi-tip">Mix green and brown materials</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Animal/Dairy Waste</div><div class="wi-tip">Add to compost in small amounts only</div></div>
+    </div>
+    <div class="tip-row">
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Composting</div><div class="wt-text">Set up a compost pit or bin in your department garden. Wet waste + dry leaves = rich organic fertiliser in 68 weeks.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Biogas</div><div class="wt-text">Our campus biogas plant converts food waste into cooking gas and biofertiliser. 50 kg waste  1 hour of cooking fuel!</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Avoid Mixing</div><div class="wt-text">Wet + dry waste = contamination. Soiled wet waste cannot be recycled and ends up in landfill. Always segregate at source.</div></div>
+    </div>
+  </div>
+
+  <!-- DRY WASTE -->
+  <div class="cat-panel reveal" id="panel-dry">
+    <div class="cat-header dry-header">
+      <span class="cat-big-icon"></span>
+      <div>
+        <div class="cat-name" style="color:var(--gold)">Dry / Recyclable Waste</div>
+        <div class="cat-desc">Dry recyclable waste goes in the <strong style="color:var(--gold)">YELLOW bin</strong>. These materials can be processed and reused  saving energy and reducing mining for raw materials.</div>
+      </div>
+    </div>
+    <div class="items-grid">
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Newspapers & Magazines</div><div class="wi-tip">Keep dry  can be fully recycled</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Cardboard Boxes</div><div class="wi-tip">Flatten before disposal for space saving</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Glass Bottles & Jars</div><div class="wi-tip">Rinse before recycling. Glass is 100% recyclable.</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Metal Cans & Tins</div><div class="wi-tip">Rinse, crush to save space</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Books & Paper</div><div class="wi-tip">Donate if usable, else recycle</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Clean Fabric / Clothes</div><div class="wi-tip">Donate or send to textile recycler</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Clean Plastic Bottles</div><div class="wi-tip">PET bottles  clean, cap off, crush</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Shampoo / Soap Bottles</div><div class="wi-tip">HDPE plastic  highly recyclable</div></div>
+    </div>
+    <div class="tip-row">
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Clean Before Recycling</div><div class="wt-text">Rinse food residue from containers. Dirty recyclables get rejected at recycling facilities and end up in landfill.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Reuse First</div><div class="wt-text">Before recycling, ask: can I reuse this? Glass jars for storage, boxes for packing, paper for notes.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Campus Drop Points</div><div class="wt-text">Yellow bins are placed at every building entrance, cafeteria, and hostel block. Find the nearest one on the Campus Map.</div></div>
+    </div>
+  </div>
+
+  <!-- HAZARDOUS -->
+  <div class="cat-panel reveal" id="panel-haz">
+    <div class="cat-header haz-header">
+      <span class="cat-big-icon"></span>
+      <div>
+        <div class="cat-name" style="color:#fca5a5">Hazardous Waste</div>
+        <div class="cat-desc">Hazardous waste contains chemicals that can harm people and the environment. It MUST go in the <strong style="color:var(--red)">RED bin</strong>  NEVER in general waste or down drains!</div>
+      </div>
+    </div>
+    <div class="items-grid">
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Batteries (All Types)</div><div class="wi-tip">Contain lead, acid. Never in general bin!</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">CFL / Fluorescent Bulbs</div><div class="wi-tip">Contain mercury  handle carefully</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Lab Chemicals</div><div class="wi-tip">Follow lab disposal protocol strictly</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Expired Medicines</div><div class="wi-tip">Return to pharmacy. Never flush!</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Paint & Solvents</div><div class="wi-tip">Take to hazardous waste collection point</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Ink Cartridges</div><div class="wi-tip">Return to printer shops for refill/recycling</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Aerosol Cans</div><div class="wi-tip">Never puncture  take to collection point</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Biomedical Waste</div><div class="wi-tip">Medical facility only  strict protocols</div></div>
+    </div>
+    <div class="tip-row">
+      <div class="waste-tip" style="border-left:3px solid var(--red)"><div class="wt-icon"></div><div class="wt-title">Never Mix!</div><div class="wt-text">Mixing hazardous waste with regular garbage endangers sanitation workers and contaminates soil and groundwater for years.</div></div>
+      <div class="waste-tip" style="border-left:3px solid var(--red)"><div class="wt-icon"></div><div class="wt-title">Drop-Off Points</div><div class="wt-text">Hazardous waste bins are at the Chemistry lab entrance, Workshop, and the main Administrative Block. Check the Campus Map.</div></div>
+      <div class="waste-tip" style="border-left:3px solid var(--red)"><div class="wt-icon"></div><div class="wt-title">Report Violations</div><div class="wt-text">See hazardous waste improperly disposed? Report it immediately to the Campus Environmental Officer at ext. 2345.</div></div>
+    </div>
+  </div>
+
+  <!-- E-WASTE -->
+  <div class="cat-panel reveal" id="panel-ewaste">
+    <div class="cat-header ewaste-header">
+      <span class="cat-big-icon"></span>
+      <div>
+        <div class="cat-name" style="color:var(--blue)">Electronic Waste (E-Waste)</div>
+        <div class="cat-desc">E-waste is one of the fastest-growing waste streams globally. It goes in the <strong style="color:var(--blue)">BLUE bin</strong>. E-waste contains valuable metals like gold, silver, copper  plus toxic materials that must be handled safely.</div>
+      </div>
+    </div>
+    <div class="items-grid">
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Old Mobile Phones</div><div class="wi-tip">Contains gold, copper, rare earth metals</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Laptops & Computers</div><div class="wi-tip">Return to manufacturer or authorised recycler</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Cables & Chargers</div><div class="wi-tip">Copper-rich  very recyclable</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Monitors & TVs</div><div class="wi-tip">Old CRTs contain lead  special handling needed</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Printers & Scanners</div><div class="wi-tip">Dismantle at authorised facility</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Headphones & Speakers</div><div class="wi-tip">Small but contains recyclable parts</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Keyboards & Mouse</div><div class="wi-tip">Plastic + metal  recyclable together</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">CDs, USBs, Hard Drives</div><div class="wi-tip">Wipe data first, then e-waste bin</div></div>
+    </div>
+    <div class="tip-row">
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Repair First</div><div class="wt-text">The greenest device is one you already have. Campus IT repair centre fixes most issues for free  extend device life by 23 years.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Donate</div><div class="wt-text">Working old devices can be donated to campus NGO partners for rural education programs. Contact Student Welfare at ext. 2211.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">E-Waste Drive</div><div class="wt-text">Our monthly E-Waste collection drive happens on the first Saturday of every month at the CSE department entrance.</div></div>
+    </div>
+  </div>
+
+  <!-- PLASTIC ALTERNATIVES -->
+  <div class="cat-panel reveal" id="panel-plastic">
+    <div class="cat-header plastic-header">
+      <span class="cat-big-icon"></span>
+      <div>
+        <div class="cat-name" style="color:#c4b5fd">Plastic-Free Alternatives</div>
+        <div class="cat-desc">The best plastic is the one never used. Here are easy, affordable, and stylish alternatives to common single-use plastics on campus.</div>
+      </div>
+    </div>
+    <div class="items-grid">
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Bottle  Steel Bottle</div><div class="wi-tip">Saves 150+ plastic bottles per year</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Bag  Cloth Bag</div><div class="wi-tip">One cloth bag replaces 700+ plastic bags</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Straw  Bamboo Straw</div><div class="wi-tip">Or just drink without a straw!</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Box  Bamboo/Steel Tiffin</div><div class="wi-tip">Lasts 10+ years vs 1 use</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Cutlery  Wooden Cutlery</div><div class="wi-tip">Biodegrades in months, not centuries</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Plastic Wrap  Beeswax Wrap</div><div class="wi-tip">Reusable up to 1 year</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Liquid Soap Bottle  Soap Bar</div><div class="wi-tip">Zero packaging waste</div></div>
+      <div class="waste-item"><span class="wi-icon"></span><div class="wi-name">Disposable Cup  Reusable Mug</div><div class="wi-tip">Campus canteen gives 5% discount with own cup!</div></div>
+    </div>
+    <div class="tip-row">
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Green Store</div><div class="wt-text">Our campus Green Store near the library sells eco-friendly alternatives at subsidised rates for students. Open MonSat, 9am5pm.</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">The Numbers</div><div class="wt-text">One student going plastic-free for a year avoids ~1,460 plastic items (4 per day). Imagine 3,000 students doing the same!</div></div>
+      <div class="waste-tip"><div class="wt-icon"></div><div class="wt-title">Plastic-Free Badge</div><div class="wt-text">Complete 30 days plastic-free and earn the campus Plastic-Free Champion badge, worth 100 eco points on the leaderboard.</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="font-size:1.6rem;display:block;margin-bottom:10px;">Sooravali<span>Campus</span></a>
+      <p>Proper waste management starts with knowledge. Know your bins. Segregate right. Make a difference every day.</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="calculator.html">Calculator</a></li>
+      <li><a href="quiz.html">Eco Quiz</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>More</h4><ul>
+      <li><a href="trees.html">Tree Tracker</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="pledge.html">Take Pledge</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy"> 2025 Sooravali Campus Initiative. Built with </span>
+    <span class="eco-badge"> Carbon-conscious website</span>
+  </div>
+</footer>
+
+<script>
+/* ========================
+   Sooravali Campus  SHARED JS
+   ======================== */
+
+// === CURSOR ===
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+if(cursor){
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = (e.clientX - 11) + 'px';
+    cursor.style.top  = (e.clientY - 11) + 'px';
+    cursorDot.style.left = (e.clientX - 2.5) + 'px';
+    cursorDot.style.top  = (e.clientY - 2.5) + 'px';
+  });
+  document.querySelectorAll('a,button,.card,.feature-card,.campaign-card,.event-card,.quiz-option,.metric-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform='scale(2)'; cursor.style.borderColor='var(--lime)'; });
+    el.addEventListener('mouseleave',  () => { cursor.style.transform='scale(1)'; cursor.style.borderColor='var(--green1)'; });
+  });
+}
+
+// === NAVBAR SCROLL ===
+const navbar = document.getElementById('navbar');
+if(navbar){
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+}
+
+// === MOBILE MENU ===
+function toggleMenu(){
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// === SCROLL REVEAL ===
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// === COUNTER ANIMATION ===
+function animateCounter(el, target, duration = 1800) {
+  const step = target / (duration / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current += step;
+    if(current >= target){ el.textContent = target.toLocaleString(); clearInterval(timer); }
+    else el.textContent = Math.floor(current).toLocaleString();
+  }, 16);
+}
+
+// === TOAST ===
+function showToast(msg, duration = 3200) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// === MODAL ===
+function openModal(id)  { const m = document.getElementById(id); if(m) m.classList.add('open'); }
+function closeModal(id) { const m = document.getElementById(id); if(m) m.classList.remove('open'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('open')); }
+window.addEventListener('click', e => {
+  document.querySelectorAll('.modal').forEach(m => { if(e.target === m) m.classList.remove('open'); });
+});
+
+</script>
+<script>
+function showCat(cat, btn){
+  document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+cat).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
